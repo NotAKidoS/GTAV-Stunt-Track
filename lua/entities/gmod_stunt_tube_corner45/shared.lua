@@ -9,7 +9,7 @@ ENT.Spawnable		= true
 ENT.AdminSpawnable  = false
 ENT.Editable = true
 
-ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_crn45_2.mdl"
+ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_crn45.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "America"
 ENT.ShouldPersist = true

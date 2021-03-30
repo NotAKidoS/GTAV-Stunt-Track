@@ -26,6 +26,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	self:Spawn()
 	self:Activate()
 	
+	-- dumb dumb workaround
 	if tr.Entity.Class == "gmod_stunt_tube_baseentity" then
 		local pls = self:GetAngles()
 		pls:RotateAroundAxis( self:GetRight(), -ent.ExitAngle.x )

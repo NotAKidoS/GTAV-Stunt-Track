@@ -153,6 +153,9 @@ function ENT:GetPointB()
 	return self:GetBonePosition(1)
 end
 
+function ENT:AddDataTables()
+end
+
 function ENT:SetupDataTables()
 	if ProxyColor then
 		self:NetworkVar( "String", 0, "ColorScheme", 
@@ -174,6 +177,7 @@ function ENT:SetupDataTables()
 			self:SetColorScheme( self.ColorScheme )
 		end
 	end
+	self:AddDataTables()
 end
 
 if ( SERVER ) then

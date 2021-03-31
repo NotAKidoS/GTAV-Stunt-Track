@@ -2,45 +2,53 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 include("shared.lua")
 
+--aligns the tube with another tube
+function ENT:AlignWithTube(ent)
+	local angle = ent.ExitAngle
+	local pos = ent:GetPointB()
+	local ang = ent:GetAngles()
+	
+	self:SetAngles(ent:GetAngles())
+	
+	local pls = self:GetAngles()
+	pls:RotateAroundAxis( self:GetRight(), -ent.ExitAngle.x )
+	self:SetAngles(pls)
+	
+	pls = self:GetAngles()
+	pls:RotateAroundAxis( self:GetForward(), -ent.ExitAngle.y )
+	self:SetAngles(pls)
+	
+	pls = self:GetAngles()
+	pls:RotateAroundAxis( self:GetUp(), -ent.ExitAngle.z )
+	self:SetAngles(pls)
+	
+	--need to call again as RotateAroundAxis refuses to allow the prop to clip into anything
+	timer.Simple( 0, function() if IsValid(self) then self:SetPos(pos) end end )
+end
+
 function ENT:SpawnFunction( ply, tr, ClassName )
 	if not tr.Hit then return end
 
-	local pos
-	local ang
 	local ent = tr.Entity
-	if tr.Entity.Class == "gmod_stunt_tube_baseentity" then
-		local angle = ent.ExitAngle
-		pos = ent:GetPointB()
-		ang = ent:GetAngles()
-	else
-		pos = tr.HitPos + (self.SpawnOffset or Vector(0,0,0))
-		ang = ply:EyeAngles()
+	
+	local self = ents.Create( ClassName )
+	
+	--align the tube with its parent tube, or just to the players eyes
+	if ent.Class == "gmod_stunt_tube_baseentity" then
+		self:AlignWithTube(ent)
+	else 
+		local pos = tr.HitPos + (self.SpawnOffset or Vector(0,0,0))
+		local ang = ply:EyeAngles()
 		ang.pitch = 0
 		ang.roll = 0
 		ang.yaw = ang.yaw + 180 + (self.SpawnAngleOffset and self.SpawnAngleOffset or 0)
+		self:SetPos( pos )
+		self:SetAngles( ang )
 	end
- 
-	local self = ents.Create( ClassName )
-	self:SetPos( pos )
-	self:SetAngles( ang )
+
 	self:Spawn()
 	self:Activate()
-	
-	-- dumb dumb workaround
-	if tr.Entity.Class == "gmod_stunt_tube_baseentity" then
-		local pls = self:GetAngles()
-		pls:RotateAroundAxis( self:GetRight(), -ent.ExitAngle.x )
-		self:SetAngles(pls)
-
-		local pls = self:GetAngles()
-		pls:RotateAroundAxis( self:GetForward(), -ent.ExitAngle.y )
-		self:SetAngles(pls)
-		
-		local pls = self:GetAngles()
-		pls:RotateAroundAxis( self:GetUp(), -ent.ExitAngle.z )
-		self:SetAngles(pls)
-	end
-
+ 
 	self:OnSpawn()
 	return self
 end

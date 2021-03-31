@@ -14,14 +14,15 @@ ENT.Mass = 10000
 ENT.ColorScheme = "America"
 ENT.ShouldPersist = false
 ENT.ExitAngle = Angle(0,0,0)  
--- ENT.BoostModifier = 200
+ENT.InitialBoost = 100
 
 function ENT:OnSpawn()
 	self:SetTrigger(true) --to enable StartTouch()
 end
 
 function ENT:StartTouch(obj)
-	local modifier = 150
+	local modifier = self:GetBoostModifier()
+
 	
 	local phys
 	if obj:GetClass() == "gmod_sent_vehicle_fphysics_wheel" then
@@ -34,4 +35,9 @@ function ENT:StartTouch(obj)
 	if IsValid(phys) then
 		phys:SetVelocity( -modifier * self:GetForward() + phys:GetVelocity() )
 	end
+end
+
+function ENT:AddDataTables()
+	self:NetworkVar( "Float", 0, "BoostModifier", { KeyName = "boostmodifier", Edit = { type = "Float", order = 2, min = 0, max = 350 } } )
+	self:SetBoostModifier(self.InitialBoost)
 end

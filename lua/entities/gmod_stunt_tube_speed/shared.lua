@@ -4,6 +4,7 @@ ENT.PrintName = "Speed Tube"
 ENT.Author = "NotAKid"
 ENT.Information = "Stunt Tubes From GTAV"
 ENT.Category = "GTAV Stunt Props"
+ENT.Class = "gmod_stunt_tube_speed"
 
 ENT.Spawnable		= true
 ENT.AdminSpawnable  = false
@@ -41,3 +42,9 @@ function ENT:AddDataTables()
 	self:NetworkVar( "Float", 0, "BoostModifier", { KeyName = "boostmodifier", Edit = { type = "Float", order = 2, min = 0, max = 350 } } )
 	self:SetBoostModifier(self.InitialBoost)
 end
+
+list.Set("NAKStuntTrack", "tube_speed", {
+	Name = ENT.PrintName,
+	Class = ENT.Class,
+	MDL = ENT.MDL,
+})

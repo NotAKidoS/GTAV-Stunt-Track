@@ -5,6 +5,8 @@ ENT.Author = "NotAKid"
 ENT.Information = "Stunt Tubes From GTAV"
 ENT.Category = "GTAV Stunt Props"
 ENT.Class = "gmod_stunt_tube_baseentity"
+ENT.StuntTrack = true
+-- ENT.IconOverride -- overrides the spawn menu icon instead of using a png
 
 ENT.Spawnable		= false
 ENT.AdminSpawnable  = false
@@ -22,7 +24,7 @@ ENT.RenderMode = RENDERGROUP_TRANSLUCENT -- RENDERGROUP_OPAQUE or RENDERGROUP_BO
 	so these colors are ripped directly from the game
 ]]--
 
-ENT.ColorSchemeIndex = {
+list.Set("NAKStuntColors", "Index", {
 	America = "America",
 	Red = "Red",
 	Blue = "Blue",
@@ -39,8 +41,8 @@ ENT.ColorSchemeIndex = {
 	OrangeBlue = "OrangeBlue",
 	GreenYellow = "GreenYellow",
 	PinkGrey = "PinkGrey",
-}
-ENT.ColorSchemeTable = {
+})
+list.Set("NAKStuntColors", "CTable", {
 	America = {
 		Color(47,75,126),
 		Color(170,43,68),
@@ -137,7 +139,7 @@ ENT.ColorSchemeTable = {
 		Color(234,11,132),
 		Color(117,117,117),
 	},
-}
+})
 
 function ENT:OnSpawn()
 end
@@ -167,11 +169,10 @@ function ENT:SetupDataTables()
 					order = 1,
 					--fuck you and your key = value logic
 					--and why you out of order? i dont want alphabetical :((
-					values = self.ColorSchemeIndex,
+					values = list.Get("NAKStuntColors").Index,
 				} 
 			} 
 		)
-		
 		if ( SERVER ) then
 			self:NetworkVarNotify( "ColorScheme", self.UpdateColorScheme )
 			self:SetColorScheme( self.ColorScheme )
@@ -184,7 +185,7 @@ if ( SERVER ) then
 	if ProxyColor then
 		function ENT:UpdateColorScheme( vname, vold, vnew )
 			if ( vold == vnew ) then return end
-			self:SetProxyColor( self.ColorSchemeTable[vnew] )
+			self:SetProxyColor( list.Get("NAKStuntColors").CTable[vnew] )
 		end
 	end
 end

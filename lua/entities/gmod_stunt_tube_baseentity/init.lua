@@ -3,19 +3,20 @@ AddCSLuaFile( "cl_init.lua" )
 include("shared.lua")
 
 --aligns the tube with another tube
-function ENT:AlignWithTube(ent)
+function ENT:AlignWithTube(ent, rr)
 	local angle = ent.ExitAngle
 	local pos = ent:GetPointB()
 	local ang = ent:GetAngles()
+	local rot = rr and rr or 0
 	
 	self:SetAngles(ent:GetAngles())
 	
 	local pls = self:GetAngles()
 	pls:RotateAroundAxis( self:GetRight(), -ent.ExitAngle.x )
 	self:SetAngles(pls)
-	
+
 	pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetForward(), -ent.ExitAngle.y )
+	pls:RotateAroundAxis( self:GetForward(), -ent.ExitAngle.y + rot )
 	self:SetAngles(pls)
 	
 	pls = self:GetAngles()

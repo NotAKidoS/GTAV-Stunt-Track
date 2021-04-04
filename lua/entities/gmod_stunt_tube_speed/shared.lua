@@ -12,8 +12,8 @@ ENT.Editable = true
 
 ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_speed.mdl"
 ENT.Mass = 10000
-ENT.ColorScheme = "America"
-ENT.ShouldPersist = false
+ENT.ColorScheme = "White"
+ENT.ShouldPersist = true
 ENT.ExitAngle = Angle(0,0,0)  
 ENT.InitialBoost = 100
 

@@ -14,7 +14,7 @@ ENT.Editable = true
 
 ENT.MDL = "error.mdl"
 ENT.Mass = 10000
-ENT.ColorScheme = "America"
+ENT.ColorScheme = "White"
 ENT.ShouldPersist = false
 ENT.ExitAngle = Angle(0,0,0) 
 ENT.RenderMode = RENDERGROUP_TRANSLUCENT -- RENDERGROUP_OPAQUE or RENDERGROUP_BOTH
@@ -173,9 +173,16 @@ function ENT:SetupDataTables()
 				} 
 			} 
 		)
-		if ( SERVER ) then
+		if SERVER then
 			self:NetworkVarNotify( "ColorScheme", self.UpdateColorScheme )
 			self:SetColorScheme( self.ColorScheme )
+		end
+	else
+		self:NetworkVar( "String", 0, "ProxyColorWarning1", {KeyName="ProxyColorWarning",Edit={category="Proxy Colors",type="string",order=1}} )
+		self:NetworkVar( "String", 1, "ProxyColorWarning2", {KeyName="ProxyColorWarning2",Edit={category="Proxy Colors",type="string",order=2}} )
+		if SERVER then
+			self:SetProxyColorWarning1("GET PROXY COLOR TOOL")
+			self:SetProxyColorWarning2("TO SET COLOR SCHEMES!!")
 		end
 	end
 	self:AddDataTables()

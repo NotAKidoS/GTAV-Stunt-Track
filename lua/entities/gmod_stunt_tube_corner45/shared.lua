@@ -12,7 +12,7 @@ ENT.Editable = true
 
 ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_crn45.mdl"
 ENT.Mass = 10000
-ENT.ColorScheme = "America"
+ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
 -- x pitch, y roll, z is up/down
 -- you can not go above 90 or itll break

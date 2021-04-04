@@ -4,7 +4,7 @@ TOOL.Category		= "NotAKid"
 TOOL.Name			= "Stunt Track Tool"
 
 TOOL.ClientConVar[ "selected_track" ] = "gmod_stunt_tube_corner90"
-TOOL.ClientConVar[ "selected_color" ] = "America"
+TOOL.ClientConVar[ "selected_color" ] = "White"
 TOOL.ClientConVar[ "rotation" ] = 0
 
 TOOL.Information = {							
@@ -56,7 +56,9 @@ function TOOL:LeftClick( trace )
 		track:Activate()
 		
 		if selectedcolor != nil then
-			track:SetProxyColor(list.Get("NAKStuntColors").CTable[selectedcolor])
+			if ProxyColor then
+				track:SetProxyColor(list.Get("NAKStuntColors").CTable[selectedcolor])
+			end
 		end
 
 		undo.Create(selectedtrack)
@@ -77,31 +79,15 @@ function TOOL:Holster()
 end
 
 function TOOL:RightClick( trace )
-	if CLIENT then
-		self:UpdateControlPanel()
-	end
-	if CLIENT then return end
-	local ent = trace.Entity
 	return true
 end
 
 function TOOL:Reload( trace )
-	if SERVER then
-		local ent = trace.Entity
-		local hitPos = trace.HitPos
-	end
 	return true
 end
 
 function TOOL:Think()
 end
-
--- function TOOL:UpdateControlPanel()
-	-- local CPanel = controlpanel.Get( "stunt_track_tool" )
-	-- local track = self:GetClientInfo( "selected_track")
-	-- CPanel:ClearControls()
-	-- self.BuildCPanel( CPanel, track )
--- end
 
 local ConVarsDefault = TOOL:BuildConVarList()
 function TOOL.BuildCPanel( CPanel, track )
@@ -155,8 +141,10 @@ function TOOL.BuildCPanel( CPanel, track )
 	end
 	DComboBox.OnSelect = function( self, index, value )
 		local ent = PreviewPanel.Entity
-		ent:SetProxyColor(list.Get("NAKStuntColors").CTable[value])
-		GetConVar("stunt_track_tool_selected_color"):SetString(value)
+		if ProxyColor then
+			ent:SetProxyColor(list.Get("NAKStuntColors").CTable[value])
+			GetConVar("stunt_track_tool_selected_color"):SetString(value)
+		end
 	end
 	PrevList:AddItem(DComboBox) -- parent the preview panel to the preview list
 
@@ -178,7 +166,9 @@ function TOOL.BuildCPanel( CPanel, track )
 			PreviewPanel:SetCamPos(pos-Vector(fitcam,0,0))
 			PreviewPanel:SetLookAt(pos)
 			GetConVar("stunt_track_tool_selected_track"):SetString(v.Class)
-			ent:SetProxyColor(list.Get("NAKStuntColors").CTable[DComboBox:GetSelected()])
+			if ProxyColor then
+				ent:SetProxyColor(list.Get("NAKStuntColors").CTable[DComboBox:GetSelected()])
+			end
 		end
 	end
 	CPanel:AddItem(List) -- parent to the base panel

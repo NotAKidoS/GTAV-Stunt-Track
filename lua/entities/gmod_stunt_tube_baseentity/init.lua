@@ -35,7 +35,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	local self = ents.Create( ClassName )
 	
 	--align the tube with its parent tube, or just to the players eyes
-	if ent.Class == "gmod_stunt_tube_baseentity" then
+	if ent.StuntTrack then
 		self:AlignWithTube(ent)
 	else 
 		local pos = tr.HitPos + (self.SpawnOffset or Vector(0,0,0))

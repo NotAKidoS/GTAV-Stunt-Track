@@ -34,12 +34,12 @@ function ENT:StartTouch(obj)
 	
 	if IsValid(phys) then
 		-- phys:SetVelocity( -modifier * self:GetForward() + phys:GetVelocity() ) 	--attempt 1
-		phys:ApplyForceCenter( -modifier * 	self:GetForward() )			--attempt 2
+		phys:ApplyForceCenter( -modifier * self:GetForward() )	--attempt 2
 	end
 end
 
 function ENT:AddDataTables()
-	self:NetworkVar( "Float", 0, "BoostModifier", { KeyName = "boostmodifier", Edit = { type = "Float", order = 2, min = 0, max = 50000 } } )
+	self:NetworkVar( "Float", 0, "BoostModifier", { KeyName = "boostmodifier", Edit = { type = "Float", order = 2, min = 0, max = 80000 } } )
 	self:SetBoostModifier(self.InitialBoost)
 end
 

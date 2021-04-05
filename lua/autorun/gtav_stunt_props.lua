@@ -3,26 +3,6 @@
 	so these colors are ripped directly from the game
 ]]
 
--- NAK = istable( NAK ) and NAK or {}
-
--- if SERVER then
-	-- util.AddNetworkString( "NAKStuntBoostEffect" )
-	-- function NAK.NWBoostEffect( player, ent, veh ) 
-		-- net.Start( "NAKStuntBoostEffect" )
-			-- net.WriteEntity( ent )
-			-- net.WriteEntity( veh )
-		-- net.Send( player )
-	-- end
--- else
-	-- net.Receive("NAKStuntBoostEffect",function()
-		-- local ent = net.ReadEntity()
-		-- local veh = net.ReadEntity()
-		-- print("BOOSTING")
-		-- print(ent)
-		-- ent:BoostEffect(veh)
-	-- end)
--- end
-
 list.Set("NAKStuntColors", "Index", {
 	America = "America",
 	Red = "Red",

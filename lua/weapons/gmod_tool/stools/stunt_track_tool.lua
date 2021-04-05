@@ -41,7 +41,7 @@ function TOOL:LeftClick( trace )
 		
 		-- align the track with its parent track, or just to the players eyes
 		if ent.StuntTrack then
-			track:AlignWithTube(ent, rot)
+			track:AlignAtEnd(ent, rot)
 		else
 			local pos = trace.HitPos + (track.SpawnOffset or Vector(0,0,0))
 			local ang = player:EyeAngles()

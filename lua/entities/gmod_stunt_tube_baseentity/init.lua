@@ -3,7 +3,7 @@ AddCSLuaFile( "cl_init.lua" )
 include("shared.lua")
 
 --aligns the tube with another tube
-function ENT:AlignWithTube(ent, rr)
+function ENT:AlignAtEnd(ent, rr)
 	local angle = ent.ExitAngle
 	local pos = ent:GetPointB()
 	local ang = ent:GetAngles()
@@ -36,7 +36,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	
 	--align the tube with its parent tube, or just to the players eyes
 	if ent.StuntTrack then
-		self:AlignWithTube(ent)
+		self:AlignAtEnd(ent)
 	else 
 		local pos = tr.HitPos + (self.SpawnOffset or Vector(0,0,0))
 		local ang = ply:EyeAngles()

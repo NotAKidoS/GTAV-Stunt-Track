@@ -1,9 +1,9 @@
 {
 	"title": "Stunt Track",
-	"type": "ServerContent",
+	"type": "model",
 	"tags": 
 	[
-		"roleplay",
-		"realism"
+		"build",
+		"fun"
 	]
 }

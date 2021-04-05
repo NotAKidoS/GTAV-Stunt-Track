@@ -2,7 +2,6 @@
 {
 	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_a"
 	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_n"
-
 	$alphatest 1
 
 	$phongexponenttexture "models/notakid/gtav/stunt_shared/green"

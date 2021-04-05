@@ -15,7 +15,7 @@ ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
 ENT.ExitAngle = Angle(0,0,0)  
-ENT.InitialBoost = 100
+ENT.InitialBoost = 50000
 
 function ENT:OnSpawn()
 	self:SetTrigger(true) --to enable StartTouch()
@@ -23,7 +23,6 @@ end
 
 function ENT:StartTouch(obj)
 	local modifier = self:GetBoostModifier()
-
 	
 	local phys
 	if obj:GetClass() == "gmod_sent_vehicle_fphysics_wheel" then
@@ -34,12 +33,13 @@ function ENT:StartTouch(obj)
 	end
 	
 	if IsValid(phys) then
-		phys:SetVelocity( -modifier * self:GetForward() + phys:GetVelocity() )
+		-- phys:SetVelocity( -modifier * self:GetForward() + phys:GetVelocity() ) 	--attempt 1
+		phys:ApplyForceCenter( -modifier * 	self:GetForward() )			--attempt 2
 	end
 end
 
 function ENT:AddDataTables()
-	self:NetworkVar( "Float", 0, "BoostModifier", { KeyName = "boostmodifier", Edit = { type = "Float", order = 2, min = 0, max = 350 } } )
+	self:NetworkVar( "Float", 0, "BoostModifier", { KeyName = "boostmodifier", Edit = { type = "Float", order = 2, min = 0, max = 50000 } } )
 	self:SetBoostModifier(self.InitialBoost)
 end
 
@@ -47,4 +47,5 @@ list.Set("NAKStuntTrack", "tube_speed", {
 	Name = ENT.PrintName,
 	Class = ENT.Class,
 	MDL = ENT.MDL,
+	Type = "Tube",
 })

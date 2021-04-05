@@ -1,0 +1,26 @@
+"VertexLitGeneric"
+{
+	$basetexture	"models/notakid/gtav/stunt_tracks/prop_track_straight_02"
+	$bumpmap	"models/notakid/gtav/stunt_tracks/prop_track_straight_01_n"
+
+	$phongexponenttexture "models/notakid/gtav/stunt_shared/green"
+	$lightwarptexture "models/notakid/gtav/stunt_shared/lightwarp_metallic"
+
+	$phong	"1"
+	$phongboost	"0"
+	$phongfresnelranges	"[0.1 0.1 0.1]"
+	$phongalbedotint	"0"
+	$phongexponent	"0"
+
+	$envmap	"models/notakid/gtav/stunt_shared/cubemap"
+	$envmaptint	"[.05 .05 .05]"
+	$normalmapalphaenvmapmask	"1"
+	$envmapfresnel	"0"
+
+	$bumpmapalphaphongmask	"1"
+
+	">=DX90"
+	{
+		"$selfillum"		"0"
+	}
+}

@@ -1,9 +1,7 @@
 "VertexLitGeneric"
 {
-	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_black_s"
-	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_black_n"
-
-	$alphatest 1
+	$basetexture	"models/notakid/gtav/stunt_tracks/prop_track_hardshoulder_tint"
+	$bumpmap	"models/notakid/gtav/stunt_tracks/prop_track_hardshoulder_n"
 
 	$phongexponenttexture "models/notakid/gtav/stunt_shared/green"
 	$lightwarptexture "models/notakid/gtav/stunt_shared/lightwarp_metallic"
@@ -28,9 +26,9 @@
 
 	proxies
 	{
-		"ColorSlot4"
+		"ColorSlot1"
 		{
-			name "Color Four"
+			name "Hard Shoulder"
 			//fcolor  "0 2 11"
 			"resultVar" "$color2"
 		}

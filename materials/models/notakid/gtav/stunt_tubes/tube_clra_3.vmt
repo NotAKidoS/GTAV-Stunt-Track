@@ -1,8 +1,7 @@
 "VertexLitGeneric"
 {
-	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_black"
-	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_black_n"
-
+	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_a"
+	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_n"
 	$alphatest 1
 
 	$phongexponenttexture "models/notakid/gtav/stunt_shared/green"
@@ -24,5 +23,15 @@
 	">=DX90"
 	{
 		"$selfillum"		"0"
+	}
+
+	proxies
+	{
+		"ColorSlot3"
+		{
+			name "Color Three"
+			//fcolor  "0 2 11"
+			"resultVar" "$color2"
+		}
 	}
 }

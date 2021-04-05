@@ -1,9 +1,7 @@
 "VertexLitGeneric"
 {
-	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_black_s"
-	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_black_n"
-
-	$alphatest 1
+	$basetexture	"models/notakid/gtav/stunt_tubes/prop_speed_up"
+	$nocull 1
 
 	$phongexponenttexture "models/notakid/gtav/stunt_shared/green"
 	$lightwarptexture "models/notakid/gtav/stunt_shared/lightwarp_metallic"
@@ -25,14 +23,13 @@
 	{
 		"$selfillum"		"0"
 	}
-
-	proxies
+	"Proxies"
 	{
-		"ColorSlot2"
+		"TextureScroll"
 		{
-			name "Color Two"
-			//fcolor  "0 2 11"
-			"resultVar" "$color2"
+			"texturescrollvar" "$baseTextureTransform"
+			"texturescrollrate" "-0.5"
+			"texturescrollangle" "0.00"
 		}
 	}
 }

@@ -22,4 +22,5 @@ list.Set("NAKStuntTrack", "tube_corner45", {
 	Name = ENT.PrintName,
 	Class = ENT.Class,
 	MDL = ENT.MDL,
+	Type = "Tube",
 })

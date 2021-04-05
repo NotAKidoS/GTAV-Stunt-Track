@@ -1,9 +1,7 @@
 "VertexLitGeneric"
 {
-	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tintprop_ramp_adjust_a"
-	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_n"
-
-	$alphatest 1
+	$basetexture	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_s"
+	$bumpmap	"models/notakid/gtav/stunt_tubes/prop_ramp_adjust_tube_n"
 
 	$phongexponenttexture "models/notakid/gtav/stunt_shared/green"
 	$lightwarptexture "models/notakid/gtav/stunt_shared/lightwarp_metallic"

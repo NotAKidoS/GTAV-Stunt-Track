@@ -3,6 +3,86 @@
 	so these colors are ripped directly from the game
 ]]
 
+if CLIENT then
+	concommand.Add( "nak_rebuild_spawnicons", function( ply, cmd, args, str )
+		local pxyclr = list.Get("NAKStuntColors").Index[args[1]] and list.Get("NAKStuntColors").Index[args[1]] or "America"
+		
+		local frame = vgui.Create( "DFrame" )
+		frame:SetSize( 438, 700 )
+		frame:Center()
+		frame:MakePopup()
+		
+		local liist = vgui.Create("DPanelList", frame)
+		liist:SetHeight(680)
+		liist:SetPadding(10)
+		liist:SetSpacing(10)
+		liist:EnableVerticalScrollbar()
+		liist:Dock(TOP)
+			
+		local PreviewPanel = vgui.Create( "DAdjustableModelPanel" )
+		PreviewPanel:SetModel( "models/notakid/gtav/stunt_tubes/stunt_tube_xxs.mdl" )
+		PreviewPanel:SetPos( 10, 10 )
+		PreviewPanel:SetSize( 300, 300 )
+		PreviewPanel:SetFOV( 45 )
+		PreviewPanel.FarZ = 32768
+		local ent = PreviewPanel.Entity
+		-- ent:SetModelScale( 1, 0 )
+		if ProxyColor then
+			if pxyclr then
+				ent:SetProxyColor(list.Get("NAKStuntColors").CTable[pxyclr])
+			end
+		end
+		
+		local mn, mx = ent:GetRenderBounds()
+		local pos = LerpVector( 0.5, mn, mx )
+		local fitcam = math.abs(pos.x*2) + math.abs(mn.y*2) -- fit entire model in camera
+
+		PreviewPanel:SetCamPos(pos-Vector(-fitcam,fitcam-mx.y,-1000))
+		PreviewPanel:SetLookAt(pos)
+		local plsk = ( pos - (pos-Vector(-fitcam,fitcam-mx.y,-1000)) ):Angle()
+		PreviewPanel:SetLookAng(plsk)
+		function PreviewPanel:LayoutEntity(ent)
+		end
+		liist:AddItem(PreviewPanel)
+		
+	--the spawnicons of the tubes
+	local List = vgui.Create( "DIconLayout" )
+	List:SetSpaceY( 5 )
+	List:SetSpaceX( 5 )
+	for k,v in pairs(list.Get("NAKStuntTrack")) do 
+		local ListItem = List:Add( "SpawnIcon" )
+		ListItem:SetSize( 128, 128 )
+		ListItem:SetModel( v.MDL )
+		function ListItem:DoClick()
+			PreviewPanel:SetModel(v.MDL)
+			local ent = PreviewPanel.Entity
+			local mn, mx = ent:GetRenderBounds()
+			local pos = LerpVector( 0.5, mn, mx )
+			local fitcam = math.abs(pos.x*2) + math.abs(mn.y*2) -- fit entire model in camera
+			PreviewPanel:SetCamPos(pos-Vector(-fitcam,fitcam-mx.y,-1000))
+			PreviewPanel:SetLookAt(pos)
+			local plsk = ( pos - (pos-Vector(-fitcam,fitcam-mx.y,-1000)) ):Angle()
+			PreviewPanel:SetLookAng(plsk)
+			
+			if ProxyColor then
+				if pxyclr then
+					ent:SetProxyColor(list.Get("NAKStuntColors").CTable[pxyclr])
+				end
+			end
+
+			local tab = {}
+			tab.ent		= ent
+			tab.cam_pos = PreviewPanel:GetCamPos()
+			tab.cam_ang = PreviewPanel:GetLookAng()
+			tab.cam_fov = 45
+			 
+			ListItem:RebuildSpawnIconEx( tab )
+		end
+	end
+	liist:AddItem(List) -- parent to the base panel
+	end )
+end
+
 list.Set("NAKStuntColors", "Index", {
 	America = "America",
 	Red = "Red",

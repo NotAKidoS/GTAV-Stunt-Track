@@ -16,7 +16,10 @@ ENT.MDL = "error.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = false
-ENT.ExitAngle = Angle(0,0,0) 
+ENT.ExitAngles = {
+	Angle(0,0,180),
+	Angle(0,0,0),
+}
 ENT.RenderMode = RENDERGROUP_TRANSLUCENT -- RENDERGROUP_OPAQUE or RENDERGROUP_BOTH
 
 function ENT:OnSpawn()

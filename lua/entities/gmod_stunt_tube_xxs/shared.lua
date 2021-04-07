@@ -16,11 +16,16 @@ ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
 -- x pitch, y roll, z is up/down
 -- you can not go above 90 or itll break
-ENT.ExitAngle = Angle(0,0,0)
+-- this now needs to be set for every bone on the model
+ENT.ExitAngles = {
+	Angle(0,0,180),
+	Angle(0,0,0),
+}
 
 list.Set("NAKStuntTrack", "tube_xxs", {
 	Name = ENT.PrintName,
 	Class = ENT.Class,
 	MDL = ENT.MDL,
 	Type = "Tube",
+	ExitAngles = ENT.ExitAngles
 })

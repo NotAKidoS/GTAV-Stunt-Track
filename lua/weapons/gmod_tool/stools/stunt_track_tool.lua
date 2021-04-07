@@ -16,7 +16,7 @@ TOOL.Information = {
 -- Language stuff
 if CLIENT then
 	language.Add("tool.stunt_track_tool.name", "Stunt Track Placer")
-	language.Add("tool.stunt_track_tool.desc", "tube")
+	language.Add("tool.stunt_track_tool.desc", "Hold DUCK to disable snapping!")
 
 	language.Add("tool.stunt_track_tool.left", "Place")
 	language.Add("tool.stunt_track_tool.right", "Update - not added")
@@ -40,8 +40,10 @@ function TOOL:LeftClick( trace )
 		if !IsValid(track) then return end
 		
 		-- align the track with its parent track, or just to the players eyes
-		if ent.StuntTrack then
-			track:AlignAtEnd(ent, rot)
+		if ent.StuntTrack and !player:KeyDown( 4 ) then
+			track:AlignAtEnd(ent, hitPos, rot)
+			track:Spawn()
+			track:Activate()
 		else
 			local pos = trace.HitPos + (track.SpawnOffset or Vector(0,0,0))
 			local ang = player:EyeAngles()
@@ -50,10 +52,11 @@ function TOOL:LeftClick( trace )
 			ang.yaw = ang.yaw + 180 + (track.SpawnAngleOffset and track.SpawnAngleOffset or 0)
 			track:SetPos( pos )
 			track:SetAngles( ang )
+			track:Spawn()
+			track:Activate()
+			local fixpos = track:GetModelBounds()
+			track:SetPos(track:GetPos() + -fixpos.y * track:GetUp())
 		end
-
-		track:Spawn()
-		track:Activate()
 		
 		if selectedcolor != nil then
 			if ProxyColor then
@@ -65,7 +68,6 @@ function TOOL:LeftClick( trace )
 		 undo.AddEntity(track)
 		 undo.SetPlayer(player)
 		undo.Finish()
-
 	end
 	return true	
 end

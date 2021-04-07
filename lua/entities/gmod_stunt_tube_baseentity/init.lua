@@ -3,24 +3,36 @@ AddCSLuaFile( "cl_init.lua" )
 include("shared.lua")
 
 --aligns the tube with another tube
-function ENT:AlignAtEnd(ent, rr)
-	local angle = ent.ExitAngle
-	local pos = ent:GetPointB()
+function ENT:AlignAtEnd(ent, nearpos, rr)
+	local pos = ent:GetBonePosition(1)
 	local ang = ent:GetAngles()
 	local rot = rr and rr or 0
-	
+	local exitang = ent.ExitAngles[2]
+
+	--use the nearest bones exit angles if we have the variable
+	if isvector(nearpos) then
+		for i=1, ent:GetBoneCount() do
+			local bpos = ent:GetBonePosition(i-1)
+			--if this bone is closer than our default (PointB), then set it as the exit angles
+			if nearpos:DistToSqr(bpos) < nearpos:DistToSqr(pos) then
+				pos = bpos
+				exitang = ent.ExitAngles[i]
+			end
+		end
+	end
+
 	self:SetAngles(ent:GetAngles())
 	
 	local pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetRight(), -ent.ExitAngle.x )
+	pls:RotateAroundAxis( self:GetRight(), -exitang.x )
 	self:SetAngles(pls)
 
 	pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetForward(), -ent.ExitAngle.y + rot )
+	pls:RotateAroundAxis( self:GetForward(), -exitang.y + rot )
 	self:SetAngles(pls)
 	
 	pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetUp(), -ent.ExitAngle.z )
+	pls:RotateAroundAxis( self:GetUp(), -exitang.z )
 	self:SetAngles(pls)
 	
 	--need to call again as RotateAroundAxis refuses to allow the prop to clip into anything
@@ -31,14 +43,14 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	if not tr.Hit then return end
 
 	local ent = tr.Entity
-	
+	local hitpos = tr.HitPos
 	local self = ents.Create( ClassName )
 	
 	--align the tube with its parent tube, or just to the players eyes
 	if ent.StuntTrack then
-		self:AlignAtEnd(ent)
+		self:AlignAtEnd(ent, hitpos)
 	else 
-		local pos = tr.HitPos + (self.SpawnOffset or Vector(0,0,0))
+		local pos = hitpos + (self.SpawnOffset or Vector(0,0,0))
 		local ang = ply:EyeAngles()
 		ang.pitch = 0
 		ang.roll = 0

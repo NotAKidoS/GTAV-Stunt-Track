@@ -2,41 +2,44 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 include("shared.lua")
 
---aligns the tube with another tube
-function ENT:AlignAtEnd(ent, nearpos, rr)
-	local pos = ent:GetBonePosition(1)
-	local ang = ent:GetAngles()
-	local rot = rr and rr or 0
-	local exitang = ent.ExitAngles[2]
+function ENT:AlignToTrack(ParentTrack, HitPos, Roll)
+	--get the track we are attaching to and its master list
+	local AttachList = list.Get("NAKStuntTrack")[ParentTrack:GetClass()]
 
-	--use the nearest bones exit angles if we have the variable
-	if isvector(nearpos) then
-		for i=1, ent:GetBoneCount() do
-			local bpos = ent:GetBonePosition(i-1)
-			--if this bone is closer than our default (PointB), then set it as the exit angles
-			if nearpos:DistToSqr(bpos) < nearpos:DistToSqr(pos) then
-				pos = bpos
-				exitang = ent.ExitAngles[i]
+	--set up some default vars, by default we use PointB / our second bone
+	local AddRot = Roll and Roll or 0 --roll to add to the track
+	local ExitPos = ParentTrack:GetBonePosition(1) --exit position to snap to, default to PointB
+	local ExitDir = AttachList.ExitPoints[2][2] --exit direction for applying roll
+	local ExitAngle = AttachList.ExitPoints[2][1] --exit angle for aligning the track
+	
+	--find the nearest bone to HitPos and use its ExitPoints
+	if isvector(HitPos) then
+		for i=1, ParentTrack:GetBoneCount() do
+			local BonePos = ParentTrack:GetBonePosition(i-1)
+			if HitPos:DistToSqr(BonePos) < HitPos:DistToSqr(ExitPos) then
+				ExitPos = BonePos
+				ExitDir = AttachList.ExitPoints[i][2]
+				ExitAngle = AttachList.ExitPoints[i][1]
 			end
 		end
 	end
 
-	self:SetAngles(ent:GetAngles())
-	
-	local pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetRight(), -exitang.x )
-	self:SetAngles(pls)
+	-- do da stuffs with the info we collected above
+	self:SetAngles(ParentTrack:GetAngles())
+	local AngleAlign = self:GetAngles()
+	AngleAlign:RotateAroundAxis( self:GetRight(), -ExitAngle.x + (AddRot * ExitDir.x) )
+	self:SetAngles(AngleAlign)
 
-	pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetForward(), -exitang.y + rot )
-	self:SetAngles(pls)
-	
-	pls = self:GetAngles()
-	pls:RotateAroundAxis( self:GetUp(), -exitang.z )
-	self:SetAngles(pls)
-	
+	AngleAlign = self:GetAngles()
+	AngleAlign:RotateAroundAxis( self:GetForward(), -ExitAngle.y + (AddRot * ExitDir.y) )
+	self:SetAngles(AngleAlign)
+
+	AngleAlign = self:GetAngles()
+	AngleAlign:RotateAroundAxis( self:GetUp(), -ExitAngle.z + (AddRot * ExitDir.z) )
+	self:SetAngles(AngleAlign)
+
 	--need to call again as RotateAroundAxis refuses to allow the prop to clip into anything
-	timer.Simple( 0, function() if IsValid(self) then self:SetPos(pos) end end )
+	timer.Simple( 0, function() if IsValid(self) then self:SetPos(ExitPos) end end )
 end
 
 function ENT:SpawnFunction( ply, tr, ClassName )
@@ -48,7 +51,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	
 	--align the tube with its parent tube, or just to the players eyes
 	if ent.StuntTrack then
-		self:AlignAtEnd(ent, hitpos)
+		self:AlignToTrack(ent, hitpos)
 	else 
 		local pos = hitpos + (self.SpawnOffset or Vector(0,0,0))
 		local ang = ply:EyeAngles()
@@ -87,10 +90,4 @@ function ENT:Initialize()
 	self:SetPersistent( self.ShouldPersist )
 	
 	self:OnInitialize()
-end
-
-function ENT:Think()
-	self:OnTick()
-	self:NextThink( CurTime() + 0.2 )
-	return true
 end

@@ -1,16 +1,16 @@
 DEFINE_BASECLASS("gmod_stunt_tube_baseentity")
 
-ENT.PrintName = "Extra Small Tube"
+ENT.PrintName = "Spacer Tube"
 ENT.Author = "NotAKid"
 ENT.Information = "Stunt Tubes From GTAV"
 ENT.Category = "GTAV Stunt Props"
-ENT.Class = "gmod_stunt_tube_xxs"
+ENT.Class = "gmod_stunt_tube_spacer"
 
 ENT.Spawnable		= true
 ENT.AdminSpawnable  = false
 ENT.Editable = true
 
-ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_xxs.mdl"
+ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_spacer.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = true

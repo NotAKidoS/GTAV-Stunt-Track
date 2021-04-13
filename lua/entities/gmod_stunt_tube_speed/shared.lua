@@ -14,10 +14,6 @@ ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_speed.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
-ENT.ExitAngles = {
-	Angle(0,0,180),
-	Angle(0,0,0),
-}
 ENT.InitialBoost = 50000
 
 function ENT:OnSpawn()
@@ -46,10 +42,13 @@ function ENT:AddDataTables()
 	self:SetBoostModifier(self.InitialBoost)
 end
 
-list.Set("NAKStuntTrack", "tube_speed", {
+list.Set("NAKStuntTrack", ENT.Class, {
 	Name = ENT.PrintName,
-	Class = ENT.Class,
 	MDL = ENT.MDL,
+	Class = ENT.Class,
 	Type = "Tube",
-	ExitAngles = ENT.ExitAngles
+	ExitPoints = {
+		{Angle(0,0,180), Vector(0,1,0)},
+		{Angle(0,0,0), Vector(0,1,0)},
+	}
 })

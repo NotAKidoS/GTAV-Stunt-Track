@@ -14,15 +14,14 @@ ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_crn90.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
-ENT.ExitAngles = {
-	Angle(0,0,180),
-	Angle(90,0,0),
-}
 
-list.Set("NAKStuntTrack", "tube_corner90", {
+list.Set("NAKStuntTrack", ENT.Class, {
 	Name = ENT.PrintName,
-	Class = ENT.Class,
 	MDL = ENT.MDL,
+	Class = ENT.Class,
 	Type = "Tube",
-	ExitAngles = ENT.ExitAngles
+	ExitPoints = {
+		{Angle(0,0,180), Vector(0,1,0)},
+		{Angle(90,0,0), Vector(0,1,0)},
+	}
 })

@@ -17,9 +17,10 @@ TOOL.Information = {
 if CLIENT then
 	language.Add("tool.stunt_track_tool.name", "Stunt Track Placer")
 	language.Add("tool.stunt_track_tool.desc", "Hold DUCK to disable snapping!")
+	language.Add("tool.stunt_track_tool.help", "Use nak_rebuild_spawnicons in console to generate spawnicons!")
 
 	language.Add("tool.stunt_track_tool.left", "Place")
-	language.Add("tool.stunt_track_tool.right", "Update - not added")
+	language.Add("tool.stunt_track_tool.right", "Delete")
 	language.Add("tool.stunt_track_tool.reload", "Copy - not added")
 end	
 
@@ -28,45 +29,47 @@ local CurEntity = nil
 
 function TOOL:LeftClick( trace )
 	if SERVER then
-		local ent = trace.Entity
-		local hitPos = trace.HitPos
-		local player = self:GetOwner()
+		--define the suspected parent track, hitpos, player, and fetch clientinfo
+		local ParentTrack = trace.Entity
+		local HitPos = trace.HitPos
+		local Ply = self:GetOwner()
 		local selectedtrack = self:GetClientInfo( "selected_track")
 		local selectedcolor = self:GetClientInfo( "selected_color")
-		local rot = self:GetClientInfo( "rotation")
+		local Roll = self:GetClientInfo( "rotation")
  
-		-- create the track
-		local track = ents.Create( selectedtrack )
-		if !IsValid(track) then return end
+		-- create the track and continue if it exists
+		local Track = ents.Create( selectedtrack )
+		if !IsValid(Track) then return end
 		
-		-- align the track with its parent track, or just to the players eyes
-		if ent.StuntTrack and !player:KeyDown( 4 ) then
-			track:AlignAtEnd(ent, hitPos, rot)
-			track:Spawn()
-			track:Activate()
+		-- align the track with the parent track, or just to the players eyes
+		if ParentTrack.StuntTrack and !Ply:KeyDown( 4 ) then
+			Track:AlignToTrack(ParentTrack, HitPos, -Roll)
+			Track:Spawn()
+			Track:Activate()
 		else
-			local pos = trace.HitPos + (track.SpawnOffset or Vector(0,0,0))
-			local ang = player:EyeAngles()
+			local pos = trace.HitPos + (Track.SpawnOffset or Vector(0,0,0))
+			local ang = Ply:EyeAngles()
+			local offset = Track.SpawnOffset and Track.SpawnOffset or 480
 			ang.pitch = 0
-			ang.roll = rot
-			ang.yaw = ang.yaw + 180 + (track.SpawnAngleOffset and track.SpawnAngleOffset or 0)
-			track:SetPos( pos )
-			track:SetAngles( ang )
-			track:Spawn()
-			track:Activate()
-			local fixpos = track:GetModelBounds()
-			track:SetPos(track:GetPos() + -fixpos.y * track:GetUp())
+			ang.roll = -Roll
+			ang.yaw = ang.yaw + 180 + (Track.SpawnAngleOffset and Track.SpawnAngleOffset or 0)
+			Track:SetPos( pos )
+			Track:SetAngles( ang )
+			Track:Spawn()
+			Track:Activate()
+			-- local fixpos = Track:GetModelBounds()
+			Track:SetPos(Track:GetPos() + offset * Track:GetUp())
 		end
 		
 		if selectedcolor != nil then
 			if ProxyColor then
-				track:SetProxyColor(list.Get("NAKStuntColors").CTable[selectedcolor])
+				Track:SetProxyColor(list.Get("NAKStuntColors").CTable[selectedcolor])
 			end
 		end
 
 		undo.Create(selectedtrack)
-		 undo.AddEntity(track)
-		 undo.SetPlayer(player)
+		 undo.AddEntity(Track)
+		 undo.SetPlayer(Ply)
 		undo.Finish()
 	end
 	return true	
@@ -81,6 +84,12 @@ function TOOL:Holster()
 end
 
 function TOOL:RightClick( trace )
+	if SERVER then
+		local ParentTrack = trace.Entity
+		if ParentTrack.StuntTrack then
+			ParentTrack:Remove()
+		end
+	end
 	return true
 end
 
@@ -95,7 +104,8 @@ local ConVarsDefault = TOOL:BuildConVarList()
 function TOOL.BuildCPanel( CPanel, track )
 
 	CPanel:AddControl( "Header", { Description = "#tool.stunt_track_tool.desc" } )
-	CPanel:AddControl( "ComboBox", { MenuButton = 1, Folder = "gtav_stunt_track", Options = { [ "#preset.default" ] = ConVarsDefault }, CVars = table.GetKeys( ConVarsDefault ) } )	
+	-- CPanel:AddControl( "Header", { Description = "#tool.stunt_track_tool.help" } )
+	-- CPanel:AddControl( "ComboBox", { MenuButton = 1, Folder = "gtav_stunt_track", Options = { [ "#preset.default" ] = ConVarsDefault }, CVars = table.GetKeys( ConVarsDefault ) } )	
 
 	-- Preview category, made so preview can be hidden
 	local PrevMenu = vgui.Create("DCollapsibleCategory")
@@ -108,6 +118,7 @@ function TOOL.BuildCPanel( CPanel, track )
 	PrevList:Dock(TOP)
 	PrevMenu:InvalidateLayout(true)
 	PrevMenu:SetExpanded(true)
+
 
 	-- the model preview panel itself
 	local PreviewPanel = vgui.Create( "DModelPanel" )
@@ -150,6 +161,17 @@ function TOOL.BuildCPanel( CPanel, track )
 	end
 	PrevList:AddItem(DComboBox) -- parent the preview panel to the preview list
 
+	local DermaNumSlider = vgui.Create( "DNumSlider" )
+	DermaNumSlider:SetPos( 50, 50 )
+	DermaNumSlider:SetSize( 200, 15 )
+	DermaNumSlider:SetText( "Rotation" )
+	DermaNumSlider:SetDark( true )
+	DermaNumSlider:SetMin( 0 )
+	DermaNumSlider:SetMax( 359 )
+	DermaNumSlider:SetDecimals( 0 )
+	DermaNumSlider:SetConVar( "stunt_track_tool_rotation" )
+	CPanel:AddItem(DermaNumSlider) -- parent to the base panel
+
 	--the spawnicons of the tubes
 	local List = vgui.Create( "DIconLayout" )
 	List:SetSpaceY( 5 )
@@ -173,16 +195,14 @@ function TOOL.BuildCPanel( CPanel, track )
 			end
 		end
 	end
-	CPanel:AddItem(List) -- parent to the base panel
+	CPanel:AddItem(List) -- parent to the base panel	
 	
-
-	local DermaNumSlider = vgui.Create( "DNumSlider" )
-	DermaNumSlider:SetPos( 50, 50 )
-	DermaNumSlider:SetSize( 300, 100 )
-	DermaNumSlider:SetText( "Rotation" )
-	DermaNumSlider:SetMin( 0 )
-	DermaNumSlider:SetMax( 360 )
-	DermaNumSlider:SetDecimals( 0 )
-	DermaNumSlider:SetConVar( "stunt_track_tool_rotation" )
-	CPanel:AddItem(DermaNumSlider) -- parent to the base panel
+	local DermaButton = vgui.Create( "DButton" )
+	DermaButton:SetText( "Generate Icons" )
+	DermaButton:SetPos( 25, 50 )
+	DermaButton:SetSize( 250, 30 )
+	DermaButton.DoClick = function()
+		RunConsoleCommand( "nak_rebuild_spawnicons", DComboBox:GetSelected() )
+	end
+	CPanel:AddItem(DermaButton) -- parent to the base panel	
 end

@@ -10,24 +10,20 @@ ENT.Spawnable		= true
 ENT.AdminSpawnable  = false
 ENT.Editable = true
 
-ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_cross_2.mdl"
+ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_cross.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
--- x pitch, y roll, z is up/down
--- you can not go above 90 or itll break
--- this now needs to be set for every bone on the model
-ENT.ExitAngles = {
-	Angle(0,0,180),
-	Angle(0,0,0),
-	Angle(0,0,90),
-	Angle(0,0,-90),
-}
 
-list.Set("NAKStuntTrack", "tube_cross", {
+list.Set("NAKStuntTrack", ENT.Class, {
 	Name = ENT.PrintName,
-	Class = ENT.Class,
 	MDL = ENT.MDL,
+	Class = ENT.Class,
 	Type = "Tube",
-	ExitAngles = ENT.ExitAngles
+	ExitPoints = {
+		{Angle(0,0,180), Vector(0,1,0)},
+		{Angle(0,0,0), Vector(0,1,0)},
+		{Angle(0,0,90), Vector(1,0,0)},
+		{Angle(0,0,-90), Vector(1,0,0)},
+	}
 })

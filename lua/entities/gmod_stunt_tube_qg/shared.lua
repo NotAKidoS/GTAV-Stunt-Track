@@ -14,17 +14,14 @@ ENT.MDL = "models/notakid/gtav/stunt_tubes/stunt_tube_qg.mdl"
 ENT.Mass = 10000
 ENT.ColorScheme = "White"
 ENT.ShouldPersist = true
--- x pitch, y roll, z is up/down
--- you can not go above 90 or itll break
-ENT.ExitAngles = {
-	Angle(0,0,180),
-	Angle(0,0,0),
-}
 
-list.Set("NAKStuntTrack", "tube_qg", {
+list.Set("NAKStuntTrack", ENT.Class, {
 	Name = ENT.PrintName,
-	Class = ENT.Class,
 	MDL = ENT.MDL,
+	Class = ENT.Class,
 	Type = "Tube",
-	ExitAngles = ENT.ExitAngles
+	ExitPoints = {
+		{Angle(0,0,180), Vector(0,1,0)},
+		{Angle(0,0,0), Vector(0,1,0)},
+	}
 })
